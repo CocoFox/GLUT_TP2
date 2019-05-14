@@ -26,7 +26,6 @@ void def_carre(void){
 }
 
 void def_boite(int a){
-  glLoadIdentity();
   glPushMatrix();
     glScalef(a*1.0,a*1.0,a*1.0); //  /!\ attention
 
@@ -34,9 +33,7 @@ void def_boite(int a){
      // glRotatef(45, 1, 0, 0);
      // glRotatef(45, 0, 1, 0);
      // glRotatef(45, 0, 0, 1); 
-      
-      
-      
+    
       glPushMatrix();
         glColor3f(1.0, 1.0, 0.0);
         glTranslatef(0, 0, 0.5);
@@ -81,21 +78,21 @@ void def_axes(void){
     glVertex3f(0.0,0.0,0.0);
     glVertex3f(1.0,0.0, 0.0);
   glEnd();
-  glFlush();
+  
 
   glColor3f(0.0, 1.0, 0.0);
   glBegin(GL_LINES);
     glVertex3f(0.0, 0.0, 0.0);
     glVertex3f(0.0, 1.0, 0.0);
   glEnd();
-  glFlush();
+  
 
   glColor3f(0.0, 0.0, 1.0);
   glBegin(GL_LINES);
     glVertex3f(0.0, 0.0, 0.0);
     glVertex3f(0.0, 0.0, 1.0);
   glEnd();
-  glFlush();
+  
 }
 
 /* Render here */
@@ -105,17 +102,24 @@ void display(void) {
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
   
-  //glColor3f(1.0, 1.0, 1.0);
-  //def_carre();
-  //glLoadIdentity();
 
-  def_boite(1);
+  cout << "angle X : " << c1_angle_x << endl;
+  cout << "angle Y : " << c1_angle_y << endl;
+  cout << "angle Z : " << c1_angle_z << endl;
+
+  //glPushMatrix();
+    glRotatef(c1_angle_x, 1, 0, 0);
+    glRotatef(c1_angle_y, 0, 1, 0);
+    glRotatef(c1_angle_z, 0, 0, 1);
+    def_boite(1);
+  //glPopMatrix();
+
+  //usleep(1);
+
   def_axes();
 
-  glFlush();
   /* Swap front and back buffers */
   glutSwapBuffers();
-  glutPostRedisplay();
 }
 
 void redim(int w, int h){
@@ -135,30 +139,30 @@ void keyboard(unsigned char key, int x, int y)
     // For cube 1 rotation:
 
   case 'a': // rotate X
-    c1_angle_x += 5;
-    cout << c1_angle_x << endl;
+    c1_angle_x = 5;
+    cout << c1_angle_x << endl << "OMGEOMGOMEG";
     break;
   case 's':
-    c1_angle_x -= 5;
+    c1_angle_x = -5;
     cout << c1_angle_x << endl;
     break;
 
 
   case 'd': // rotate Y
-    c1_angle_y += 5;
+    c1_angle_y = 5;
     cout << c1_angle_y << endl;
     break;
   case 'f':
-    c1_angle_y -= 5;
+    c1_angle_y = -5;
     cout << c1_angle_y << endl;
     break;
 
   case 'g': // rotate Z
-    c1_angle_z += 5;
+    c1_angle_z = 5;
     cout << c1_angle_z << endl;
     break;
   case 'h':
-    c1_angle_z -= 5;
+    c1_angle_z = -5;
     cout << c1_angle_z << endl;
     break;
   }
