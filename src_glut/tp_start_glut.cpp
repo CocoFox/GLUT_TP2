@@ -107,12 +107,15 @@ void display(void) {
   
   //glColor3f(1.0, 1.0, 1.0);
   //def_carre();
+  //glLoadIdentity();
+
   def_boite(1);
   def_axes();
 
   glFlush();
   /* Swap front and back buffers */
   glutSwapBuffers();
+  glutPostRedisplay();
 }
 
 void redim(int w, int h){
@@ -133,25 +136,33 @@ void keyboard(unsigned char key, int x, int y)
 
   case 'a': // rotate X
     c1_angle_x += 5;
+    cout << c1_angle_x << endl;
     break;
   case 's':
     c1_angle_x -= 5;
+    cout << c1_angle_x << endl;
     break;
 
 
   case 'd': // rotate Y
     c1_angle_y += 5;
+    cout << c1_angle_y << endl;
     break;
   case 'f':
     c1_angle_y -= 5;
-
+    cout << c1_angle_y << endl;
+    break;
 
   case 'g': // rotate Z
     c1_angle_z += 5;
+    cout << c1_angle_z << endl;
     break;
   case 'h':
     c1_angle_z -= 5;
+    cout << c1_angle_z << endl;
+    break;
   }
+  glutPostRedisplay();
 }
 
 int main(int argc, char **argv) {
