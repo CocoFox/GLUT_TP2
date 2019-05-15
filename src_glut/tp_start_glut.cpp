@@ -9,9 +9,9 @@
 
 using namespace std;
 
-GLfloat rot_angle = 1.2f; // rotation angle
+GLfloat rot_angle = 0.8f; // rotation angle
 int refreshmill = 1; // milisecond refresh rate
-
+bool spin = true;
 void def_boite(float a);
 
 void timer(int value){
@@ -28,10 +28,11 @@ void cube_spin(void){
   //rot_angle += 0.2;
   //if(rot_angle >= 360)
     //rot_angle -= 360;
-
-  glRotatef((GLfloat)rot_angle*4, 1, 0, 0);
-  glRotatef((GLfloat)rot_angle, 0, 1, 0);
-  glRotatef((GLfloat)rot_angle, 0, 0, 1);
+  if(spin){
+    glRotatef((GLfloat)rot_angle*4, 1, 0, 0);
+    glRotatef((GLfloat)rot_angle  , 0, 1, 0);
+    glRotatef((GLfloat)rot_angle  , 0, 0, 1);
+  }
   def_boite(1);
   
 }
@@ -55,7 +56,7 @@ void def_carre(void){
   
 }
 
-void def_boite(float a){
+void def_boite(GLfloat a){
   
     glScalef(a*1.0,a*1.0,a*1.0); //  /!\ attention
 
@@ -134,14 +135,16 @@ void display(void) {
   glDepthFunc(GL_LESS);
   
 
-  cout << "angle X : " << c1_angle_x << endl;
-  cout << "angle Y : " << c1_angle_y << endl;
-  cout << "angle Z : " << c1_angle_z << endl;
+  //cout << "angle X : " << c1_angle_x << endl;
+  //cout << "angle Y : " << c1_angle_y << endl;
+  //cout << "angle Z : " << c1_angle_z << endl;
 
   //glPushMatrix();
-    glRotatef(c1_angle_x, 1, 0, 0);
-    glRotatef(c1_angle_y, 0, 1, 0);
-    glRotatef(c1_angle_z, 0, 0, 1);
+    if(spin){
+      glRotatef(c1_angle_x, 1, 0, 0);
+      glRotatef(c1_angle_y, 0, 1, 0);
+      glRotatef(c1_angle_z, 0, 0, 1);
+    }
     def_boite(1);
   //glPopMatrix();
   //usleep(1);
@@ -202,6 +205,8 @@ void keyboard(unsigned char key, int x, int y)
   case 'h':
     c1_angle_z = -5;
     break;
+  case 'j':
+    spin = !spin;
   }
   glutPostRedisplay();
 }
