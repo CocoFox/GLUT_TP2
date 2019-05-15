@@ -9,9 +9,10 @@
 
 using namespace std;
 
-GLfloat rot_angle = 0.8f; // rotation angle
+GLfloat rot_angle = 0.1f; // rotation angle
 int refreshmill = 1; // milisecond refresh rate
-bool spin = true;
+bool spin1 = true;
+bool spin2 = false;
 void def_boite(float a);
 
 
@@ -21,6 +22,11 @@ void timer(int value){
   usleep(10000);
 }
 
+float c1_tf[16];
+
+float c2_tf[16];
+
+
 int c1_angle_x = 0;
 int c1_angle_y = 0;
 int c1_angle_z = 0;
@@ -29,7 +35,10 @@ int c2_angle_x = 0;
 int c2_angle_y = 0;
 int c2_angle_z = 0;
 
+
+
 void cube_spin(void){
+  /*
   rot_angle += 0.2;
   if(rot_angle >= 360)
     rot_angle -= 360;
@@ -39,6 +48,7 @@ void cube_spin(void){
     glRotatef((GLfloat)rot_angle  , 0, 0, 1);
   }
   def_boite(1);
+  */
   
 }
 
@@ -138,30 +148,28 @@ void display(void) {
 
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
-    glPushMatrix(); 
-
-    if(spin){
-      glRotatef(c1_angle_x, 1, 0, 0);
-      glRotatef(c1_angle_y, 0, 1, 0);
-      glRotatef(c1_angle_z, 0, 0, 1);
-    }
     
+    glPushMatrix(); 
+    glRotatef(c1_angle_x, 1, 0, 0);
+    glRotatef(c1_angle_y, 0, 1, 0);
+    glRotatef(c1_angle_z, 0, 0, 1);
     glTranslatef(1,0,0);
+    glGetFloatv(GL_MODELVIEW_MATRIX,c1_tf);
     def_boite(1);
     def_axes();
-
     glPopMatrix();
 
 
 
 
     glPushMatrix();
+    /*
     if(spin){
       glRotatef(c2_angle_x, 1, 0, 0);
       glRotatef(c2_angle_y, 0, 1, 0);
       glRotatef(c2_angle_z, 0, 0, 1);
     }
-    
+    */
     glTranslatef(-1,0,0);
     def_boite(1);
     def_axes();
@@ -261,7 +269,11 @@ void keyboard(unsigned char key, int x, int y)
 
 
   case 'j':
-    spin = !spin;
+    spin1 = !spin1;
+    break;
+  case 'k':
+    spin2 = !spin2;
+    break;
   }
   glutPostRedisplay();
 }
@@ -273,6 +285,11 @@ int main(int argc, char **argv) {
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
   glutInitWindowSize(800, 800);
   glutCreateWindow("OMG! it's a Fucking BOX!!");
+
+  glLoadIdentity();
+  glGetFloatv(GL_MODELVIEW_MATRIX,c1_tf);
+  glGetFloatv(GL_MODELVIEW_MATRIX,c2_tf);
+  glPopMatrix();
 
   /* Callback for display */
   glutReshapeFunc(redim);
