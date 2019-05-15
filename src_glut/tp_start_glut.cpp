@@ -9,10 +9,36 @@
 
 using namespace std;
 
+GLfloat rot_angle = 1.2f; // rotation angle
+int refreshmill = 1; // milisecond refresh rate
+
+void def_boite(float a);
+
+void timer(int value){
+  glutPostRedisplay();
+  glutTimerFunc(refreshmill,timer,1);
+  usleep(1000);
+}
+
 int c1_angle_x = 0;
 int c1_angle_y = 0;
 int c1_angle_z = 0;
 
+void cube_spin(void){
+  //rot_angle += 0.2;
+  //if(rot_angle >= 360)
+    //rot_angle -= 360;
+
+  glRotatef((GLfloat)rot_angle/3, 1, 0, 0);
+  glRotatef((GLfloat)rot_angle/2, 0, 1, 0);
+  glRotatef((GLfloat)rot_angle, 0, 0, 1);
+  def_boite(1);
+  
+}
+
+void init_perspective(void){
+  
+}
 
 void def_carre(void){
   
@@ -25,8 +51,8 @@ void def_carre(void){
   
 }
 
-void def_boite(int a){
-  glPushMatrix();
+void def_boite(float a){
+  
     glScalef(a*1.0,a*1.0,a*1.0); //  /!\ attention
 
     //glPushMatrix();
@@ -69,7 +95,7 @@ void def_boite(int a){
 
     //glPopMatrix();
     
-  glPopMatrix();
+  
 }
 
 void def_axes(void){
@@ -97,6 +123,7 @@ void def_axes(void){
 
 /* Render here */
 void display(void) {
+  init_perspective();
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glEnable(GL_DEPTH_TEST);
@@ -113,7 +140,6 @@ void display(void) {
     glRotatef(c1_angle_z, 0, 0, 1);
     def_boite(1);
   //glPopMatrix();
-
   //usleep(1);
 
   def_axes();
@@ -123,7 +149,20 @@ void display(void) {
 }
 
 void redim(int w, int h){
+ 
   glViewport(0, 0, w, h);
+  /*
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  gluPerspective(45,
+    (GLfloat)w/h,
+    10,
+    1000);
+  cout << endl << "aspect: " << (GLfloat) w/h << endl ; 
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  gluLookAt(0,0,0,10,0,0,0,1,0);
+  */
 }
 
 void keyboard(unsigned char key, int x, int y)
@@ -140,30 +179,24 @@ void keyboard(unsigned char key, int x, int y)
 
   case 'a': // rotate X
     c1_angle_x = 5;
-    cout << c1_angle_x << endl << "OMGEOMGOMEG";
     break;
   case 's':
     c1_angle_x = -5;
-    cout << c1_angle_x << endl;
     break;
 
 
   case 'd': // rotate Y
     c1_angle_y = 5;
-    cout << c1_angle_y << endl;
     break;
   case 'f':
     c1_angle_y = -5;
-    cout << c1_angle_y << endl;
     break;
 
   case 'g': // rotate Z
     c1_angle_z = 5;
-    cout << c1_angle_z << endl;
     break;
   case 'h':
     c1_angle_z = -5;
-    cout << c1_angle_z << endl;
     break;
   }
   glutPostRedisplay();
@@ -181,6 +214,8 @@ int main(int argc, char **argv) {
   glutReshapeFunc(redim);
   glutDisplayFunc(display);
   glutKeyboardFunc(keyboard);
+  glutIdleFunc(cube_spin); 
+  glutTimerFunc(0,timer,0);
 
   /* Main loop */
   glutMainLoop();
