@@ -154,11 +154,11 @@ void display(void) {
   /* Swap front and back buffers */
   glutSwapBuffers();
 }
-
+/*
 void redim(int w, int h){
  
   glViewport(0, 0, w, h);
-  /*
+  
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluPerspective(45,
@@ -169,8 +169,24 @@ void redim(int w, int h){
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   gluLookAt(0,0,0,10,0,0,0,1,0);
-  */
+ 
 }
+ */
+void redim(int width, int height) {
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(0.0, 0.0, -4,
+              0.0, 0.0, 0.0,
+              0.0, 1.0, 0.0);
+    
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(70.0, 1.0, 1.0, 12.0);
+    glMatrixMode(GL_MODELVIEW);
+
+}
+
 
 void keyboard(unsigned char key, int x, int y)
 {
