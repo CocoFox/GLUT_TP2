@@ -29,8 +29,8 @@ void cube_spin(void){
   //if(rot_angle >= 360)
     //rot_angle -= 360;
 
-  glRotatef((GLfloat)rot_angle/3, 1, 0, 0);
-  glRotatef((GLfloat)rot_angle/2, 0, 1, 0);
+  glRotatef((GLfloat)rot_angle*4, 1, 0, 0);
+  glRotatef((GLfloat)rot_angle, 0, 1, 0);
   glRotatef((GLfloat)rot_angle, 0, 0, 1);
   def_boite(1);
   
@@ -42,6 +42,10 @@ void init_perspective(void){
 
 void def_carre(void){
   
+
+  glPolygonMode(GL_FRONT, GL_FILL);
+  glPolygonMode(GL_BACK, GL_LINE);
+  //glCullFace(GL_FRONT);
   glBegin(GL_POLYGON);
     glVertex3f(0.5, 0.5, 0);
     glVertex3f(-0.5, 0.5, 0);
@@ -216,6 +220,8 @@ int main(int argc, char **argv) {
   glutKeyboardFunc(keyboard);
   glutIdleFunc(cube_spin); 
   glutTimerFunc(0,timer,0);
+
+  //glEnable(GL_CULL_FACE);
 
   /* Main loop */
   glutMainLoop();
