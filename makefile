@@ -25,5 +25,8 @@ tp_start_glut : start_glut
 
 
 
+
+
+
 clean :
 	rm src/*.o ./tp_start_glfw ./tp_start_glut
