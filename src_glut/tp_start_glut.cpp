@@ -11,10 +11,9 @@ using namespace std;
 
 GLfloat rot_angle = 0.8f; // rotation angle
 int refreshmill = 1; // milisecond refresh rate
-bool spin = false;
+bool spin = true;
 void def_boite(float a);
 
-int init_translate = true;
 
 void timer(int value){
   glutPostRedisplay();
@@ -26,12 +25,16 @@ int c1_angle_x = 0;
 int c1_angle_y = 0;
 int c1_angle_z = 0;
 
+int c2_angle_x = 0;
+int c2_angle_y = 0;
+int c2_angle_z = 0;
+
 void cube_spin(void){
-  //rot_angle += 0.2;
-  //if(rot_angle >= 360)
-    //rot_angle -= 360;
+  rot_angle += 0.2;
+  if(rot_angle >= 360)
+    rot_angle -= 360;
   if(spin){
-    glRotatef((GLfloat)rot_angle*4, 1, 0, 0);
+    glRotatef((GLfloat)rot_angle, 1, 0, 0);
     glRotatef((GLfloat)rot_angle*2 , 0, 1, 0);
     glRotatef((GLfloat)rot_angle  , 0, 0, 1);
   }
@@ -135,36 +138,35 @@ void display(void) {
 
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
-    
-    
+    glPushMatrix(); 
 
-      
-      
     if(spin){
       glRotatef(c1_angle_x, 1, 0, 0);
       glRotatef(c1_angle_y, 0, 1, 0);
       glRotatef(c1_angle_z, 0, 0, 1);
     }
-    glPushMatrix(); 
+    
     glTranslatef(1,0,0);
     def_boite(1);
     def_axes();
+
     glPopMatrix();
 
+
+
+
     glPushMatrix();
+    if(spin){
+      glRotatef(c2_angle_x, 1, 0, 0);
+      glRotatef(c2_angle_y, 0, 1, 0);
+      glRotatef(c2_angle_z, 0, 0, 1);
+    }
+    
     glTranslatef(-1,0,0);
     def_boite(1);
     def_axes();
     glPopMatrix();
 
-    
-    
-  
-  //usleep(1);
-
-  
-
-  /* Swap front and back buffers */
   
   glutSwapBuffers();
 }
@@ -204,37 +206,60 @@ void redim(int width, int height) {
 
 void keyboard(unsigned char key, int x, int y)
 {
-  cout << key;
   switch (key)
   {
-  case 'q':
-  case 'Q':
+  case ' ':
     exit(0);
     break;
-
     // For cube 1 rotation:
 
   case 'a': // rotate X
-    c1_angle_x = 5;
+
+    c1_angle_x +=0.2;
     break;
   case 's':
-    c1_angle_x = -5;
+    c1_angle_x -= 0.2;
     break;
 
 
   case 'd': // rotate Y
-    c1_angle_y = 5;
+    c1_angle_y +=0.2;
     break;
   case 'f':
-    c1_angle_y = -5;
+    c1_angle_y -= 0.2;
     break;
 
   case 'g': // rotate Z
-    c1_angle_z = 5;
+    c1_angle_z +=0.2;
     break;
   case 'h':
-    c1_angle_z = -5;
+    c1_angle_z -= 0.2;
     break;
+
+ // second cube
+  case 'q': // rotate X
+    c2_angle_x +=0.2;
+    break;
+  case 'w':
+    c2_angle_x -= 0.2;
+    break;
+
+
+  case 'e': // rotate Y
+    c2_angle_y +=0.2;
+    break;
+  case 'r':
+    c2_angle_y -= 0.2;
+    break;
+
+  case 't': // rotate Z
+    c2_angle_z +=0.2;
+    break;
+  case 'y':
+    c2_angle_z -= 0.2;
+    break;
+
+
   case 'j':
     spin = !spin;
   }
