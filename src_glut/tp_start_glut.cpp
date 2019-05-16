@@ -1,10 +1,11 @@
 #ifdef __APPLE__
-    #include <GLUT/glut.h>
+     #include <GLUT/glut.h>
+#else
+    #include <GL/glut.h>
+   
     #include <stdlib.h>
     #include <iostream>
     #include <unistd.h>
-#else
-    #include <GL/glut.h>
 #endif
 
 using namespace std;
@@ -12,7 +13,7 @@ using namespace std;
 GLfloat rot_angle = 0.1f; // rotation angle
 int refreshmill = 1; // milisecond refresh rate
 bool spin1 = true;
-bool spin2 = false;
+bool spin2 = true;
 void def_boite(float a);
 
 
@@ -37,24 +38,6 @@ int c2_angle_z = 0;
 
 
 
-void cube_spin(void){
-  /*
-  rot_angle += 0.2;
-  if(rot_angle >= 360)
-    rot_angle -= 360;
-  if(spin){
-    glRotatef((GLfloat)rot_angle, 1, 0, 0);
-    glRotatef((GLfloat)rot_angle*2 , 0, 1, 0);
-    glRotatef((GLfloat)rot_angle  , 0, 0, 1);
-  }
-  def_boite(1);
-  */
-  
-}
-
-void init_perspective(void){
-  
-}
 
 void def_carre(void){
   
@@ -141,43 +124,90 @@ void def_axes(void){
   
 }
 
-/* Render here */
+
+
+void load_transforms(void){
+  glPushMatrix();
+    glRotatef(c1_angle_x, 1, 0, 0);
+    glRotatef(c1_angle_y, 0, 1, 0);
+    glRotatef(c1_angle_z, 0, 0, 1);  // cube 1 
+    glTranslatef(1,0,0);
+    glGetFloatv(GL_MODELVIEW_MATRIX,c1_tf);
+    //glMultMatrixf(c1_tf);
+  glPopMatrix();
+
+  glPushMatrix(); 
+    glRotatef(c2_angle_x, 1, 0, 0);
+    glRotatef(c2_angle_y, 0, 1, 0);
+    glRotatef(c2_angle_z, 0, 0, 1);  // cube 2
+    glTranslatef(-2,0,0);
+    glGetFloatv(GL_MODELVIEW_MATRIX, c2_tf);
+    //glMultMatrixf(c2_tf);
+  glPopMatrix();
+}
+void cube_spin(void){
+
+  if (spin1){
+    c1_angle_x += 3;
+    c1_angle_y += 3;
+    c1_angle_z += 3;
+  }
+  else{
+    c1_angle_x += 3;
+    c1_angle_y += 3;
+    c1_angle_z += 3;
+  }
+
+  if (spin2){
+    c2_angle_x = 0;
+    c2_angle_y = 0;
+    c2_angle_z = 0;
+  }
+  else{
+    c2_angle_x = 0;
+    c2_angle_y = 0;
+    c2_angle_z = 0;
+  }
+  
+  if (c2_angle_x >= 360)
+    c2_angle_x = 0;
+  if (c2_angle_x >= 360)
+    c2_angle_y = 0;
+  if (c2_angle_x >= 360)
+    c2_angle_z = 0;
+
+  if (c1_angle_x >= 360)
+    c1_angle_x = 0;
+  if (c1_angle_x >= 360)
+    c1_angle_y = 0;
+  if (c1_angle_x >= 360)
+    c1_angle_z = 0;
+
+
+}
 void display(void) {
-  init_perspective();
+  
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
-    
+
+    load_transforms();
     glPushMatrix(); 
-    glRotatef(c1_angle_x, 1, 0, 0);
-    glRotatef(c1_angle_y, 0, 1, 0);
-    glRotatef(c1_angle_z, 0, 0, 1);
-    glTranslatef(1,0,0);
-    glGetFloatv(GL_MODELVIEW_MATRIX,c1_tf);
-    def_boite(1);
-    def_axes();
+      glLoadMatrixf(c1_tf);
+      def_boite(1);
+      def_axes();
     glPopMatrix();
-
-
-
 
     glPushMatrix();
-    /*
-    if(spin){
-      glRotatef(c2_angle_x, 1, 0, 0);
-      glRotatef(c2_angle_y, 0, 1, 0);
-      glRotatef(c2_angle_z, 0, 0, 1);
-    }
-    */
-    glTranslatef(-1,0,0);
-    def_boite(1);
-    def_axes();
+      glLoadMatrixf(c2_tf);
+      def_boite(1);
+      def_axes();
     glPopMatrix();
 
-  
   glutSwapBuffers();
 }
+
 /*
 void redim(int w, int h){
  
@@ -214,6 +244,7 @@ void redim(int width, int height) {
 
 void keyboard(unsigned char key, int x, int y)
 {
+  cout << key  << endl;
   switch (key)
   {
   case ' ':
@@ -223,48 +254,48 @@ void keyboard(unsigned char key, int x, int y)
 
   case 'a': // rotate X
 
-    c1_angle_x +=0.2;
+    //c1_angle_x +=0.2;
     break;
   case 's':
-    c1_angle_x -= 0.2;
+    //c1_angle_x -= 0.2;
     break;
 
 
   case 'd': // rotate Y
-    c1_angle_y +=0.2;
+    //c1_angle_y +=0.2;
     break;
   case 'f':
-    c1_angle_y -= 0.2;
+    //c1_angle_y -= 0.2;
     break;
 
   case 'g': // rotate Z
-    c1_angle_z +=0.2;
+    //c1_angle_z +=0.2;
     break;
   case 'h':
-    c1_angle_z -= 0.2;
+    //c1_angle_z -= 0.2;
     break;
 
  // second cube
   case 'q': // rotate X
-    c2_angle_x +=0.2;
+    //c2_angle_x +=0.2;
     break;
   case 'w':
-    c2_angle_x -= 0.2;
+    //c2_angle_x -= 0.2;
     break;
 
 
   case 'e': // rotate Y
-    c2_angle_y +=0.2;
+    //c2_angle_y +=0.2;
     break;
   case 'r':
-    c2_angle_y -= 0.2;
+    //c2_angle_y -= 0.2;
     break;
 
   case 't': // rotate Z
-    c2_angle_z +=0.2;
+    //c2_angle_z +=0.2;
     break;
   case 'y':
-    c2_angle_z -= 0.2;
+    //c2_angle_z -= 0.2;
     break;
 
 
@@ -286,10 +317,10 @@ int main(int argc, char **argv) {
   glutInitWindowSize(800, 800);
   glutCreateWindow("OMG! it's a Fucking BOX!!");
 
-  glLoadIdentity();
-  glGetFloatv(GL_MODELVIEW_MATRIX,c1_tf);
-  glGetFloatv(GL_MODELVIEW_MATRIX,c2_tf);
-  glPopMatrix();
+  //glLoadIdentity(); // load identity
+ // glGetFloatv(GL_MODELVIEW_MATRIX,c1_tf); // load them into the TFs yeah
+  //glGetFloatv(GL_MODELVIEW_MATRIX,c2_tf); //
+ // glPopMatrix(); // get rid of I 
 
   /* Callback for display */
   glutReshapeFunc(redim);

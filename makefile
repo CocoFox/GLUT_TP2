@@ -1,5 +1,5 @@
 IFLAGS =  -Iaby/include -Ilibs_osx_static/assimp/include -Ilibs_osx_static/glew/include -Ilibs_osx_static/glfw/include -Ilibs_osx_static/glm/include -Ilibs_osx_static/soil/include
-CPPFLAGS = -std=c++11 -O3 -Wno-deprecated-declarations
+CPPFLAGS = -std=c++11 -O3 -Wno-deprecated-declarations #-v
 CXX=clang++
 
 GL_LIBS = -Llibs_osx_static/glfw/lib -lglfw3
