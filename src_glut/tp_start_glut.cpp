@@ -128,22 +128,26 @@ void def_axes(void){
 
 void load_transforms(void){
   glPushMatrix();
-    glRotatef(c1_angle_x, 1, 0, 0);
-    glRotatef(c1_angle_y, 0, 1, 0);
-    glRotatef(c1_angle_z, 0, 0, 1);  // cube 1 
+  
+    glTranslatef(-1,0,0);
+    glRotatef(c2_angle_x, 1, 0, 0);
+    glRotatef(c2_angle_y/4, 0, 1, 0);
+    glRotatef(c2_angle_z*2, 0, 0, 1);
+    
+    
+    glGetFloatv(GL_MODELVIEW_MATRIX,c2_tf);
+    //glMultMatrixf(c2_tf);
+  glPopMatrix();
+  glPushMatrix();
     glTranslatef(1,0,0);
+    glRotatef(c1_angle_x, 1, 0, 0);
+    glRotatef(c1_angle_y/2, 0, 1, 0);
+    glRotatef(c1_angle_z*2, 0, 0, 1); 
+    
     glGetFloatv(GL_MODELVIEW_MATRIX,c1_tf);
     //glMultMatrixf(c1_tf);
   glPopMatrix();
 
-  glPushMatrix(); 
-    glRotatef(c2_angle_x, 1, 0, 0);
-    glRotatef(c2_angle_y, 0, 1, 0);
-    glRotatef(c2_angle_z, 0, 0, 1);  // cube 2
-    glTranslatef(-2,0,0);
-    glGetFloatv(GL_MODELVIEW_MATRIX, c2_tf);
-    //glMultMatrixf(c2_tf);
-  glPopMatrix();
 }
 void cube_spin(void){
 
@@ -152,22 +156,14 @@ void cube_spin(void){
     c1_angle_y += 3;
     c1_angle_z += 3;
   }
-  else{
-    c1_angle_x += 3;
-    c1_angle_y += 3;
-    c1_angle_z += 3;
-  }
+
 
   if (spin2){
-    c2_angle_x = 0;
-    c2_angle_y = 0;
-    c2_angle_z = 0;
+    c2_angle_x += 3;
+    c2_angle_y += 3;
+    c2_angle_z += 3;
   }
-  else{
-    c2_angle_x = 0;
-    c2_angle_y = 0;
-    c2_angle_z = 0;
-  }
+  
   
   if (c2_angle_x >= 360)
     c2_angle_x = 0;
@@ -183,14 +179,20 @@ void cube_spin(void){
   if (c1_angle_x >= 360)
     c1_angle_z = 0;
 
-
+      
+  
 }
 void display(void) {
-  
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
+ glPushMatrix();
+      glLoadMatrixf(c2_tf);
+      def_boite(1);
+      def_axes();
+    glPopMatrix();
+
 
     load_transforms();
     glPushMatrix(); 
@@ -199,33 +201,14 @@ void display(void) {
       def_axes();
     glPopMatrix();
 
-    glPushMatrix();
-      glLoadMatrixf(c2_tf);
-      def_boite(1);
-      def_axes();
-    glPopMatrix();
+    load_transforms();
+
+   
 
   glutSwapBuffers();
 }
 
-/*
-void redim(int w, int h){
- 
-  glViewport(0, 0, w, h);
-  
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluPerspective(45,
-    (GLfloat)w/h,
-    10,
-    1000);
-  cout << endl << "aspect: " << (GLfloat) w/h << endl ; 
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  gluLookAt(0,0,0,10,0,0,0,1,0);
- 
-}
- */
+
 void redim(int width, int height) {
     glViewport(0, 0, width, height);
     glMatrixMode(GL_MODELVIEW);
@@ -306,6 +289,9 @@ void keyboard(unsigned char key, int x, int y)
     spin2 = !spin2;
     break;
   }
+
+  cout << "SPIN1: " << spin1 << endl;
+  cout << "SPIN2: " << spin2 << endl;
   glutPostRedisplay();
 }
 
